@@ -29,12 +29,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("{api.prefix}/images")
+@RequestMapping("{apiPrefix}")
 public class ImageController {
 
     private final IImageService imageService;
 
-    @PostMapping("/upload")
+    @PostMapping("/image/upload")
     public ResponseEntity<ApiResponse> saveImages(@RequestParam List<MultipartFile> files,
             @RequestParam Long productId) {
 

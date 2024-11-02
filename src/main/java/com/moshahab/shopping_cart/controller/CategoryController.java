@@ -22,11 +22,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("{api.prefix}/categories")
+@RequestMapping("${apiPrefix}")
 public class CategoryController {
     private final ICategoryService categoryService;
 
-    @GetMapping("/all")
+    @GetMapping("/category/all")
     public ResponseEntity<ApiResponse> getAllCategories() {
         try {
             List<Category> categories = categoryService.getAllCategories();
@@ -36,7 +36,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping("/category/add")
     public ResponseEntity<ApiResponse> addCategory(@RequestBody Category name) {
         try {
             Category theCategory = categoryService.addCategory(name);
