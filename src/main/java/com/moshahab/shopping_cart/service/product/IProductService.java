@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.moshahab.shopping_cart.model.Product;
 import com.moshahab.shopping_cart.request.AddProductRequest;
+import com.moshahab.shopping_cart.request.UpdateProductRequest;
 
 public interface IProductService {
     Product addProducts(AddProductRequest product);
@@ -14,7 +15,7 @@ public interface IProductService {
 
     void deleteProductById(Long id);
 
-    void updateProduct(Product product, Long productId);
+    Product updateProduct(UpdateProductRequest request, Long productId);
 
     List<Product> getProductsByCategory(String category);
 
