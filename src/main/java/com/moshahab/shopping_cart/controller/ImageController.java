@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("{apiPrefix}")
+@RequestMapping("${apiPrefix}")
 public class ImageController {
 
     private final IImageService imageService;
