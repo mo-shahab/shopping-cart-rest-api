@@ -6,4 +6,6 @@ import com.moshahab.shopping_cart.model.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
+    Cart findByUserId(Long userId);
+
 }
