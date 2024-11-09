@@ -2,6 +2,7 @@ package com.moshahab.shopping_cart.service.product;
 
 import java.util.List;
 
+import com.moshahab.shopping_cart.dto.ProductDto;
 import com.moshahab.shopping_cart.model.Product;
 import com.moshahab.shopping_cart.request.AddProductRequest;
 import com.moshahab.shopping_cart.request.UpdateProductRequest;
@@ -28,4 +29,8 @@ public interface IProductService {
     List<Product> getProductsByBrandAndName(String brand, String name);
 
     Long countProductsByBrandAndName(String brand, String name);
+
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }

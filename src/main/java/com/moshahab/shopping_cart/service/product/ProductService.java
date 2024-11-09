@@ -3,12 +3,17 @@ package com.moshahab.shopping_cart.service.product;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.moshahab.shopping_cart.dto.ImageDto;
+import com.moshahab.shopping_cart.dto.ProductDto;
 import com.moshahab.shopping_cart.exceptions.ProductNotFoundException;
 import com.moshahab.shopping_cart.model.Category;
+import com.moshahab.shopping_cart.model.Image;
 import com.moshahab.shopping_cart.model.Product;
 import com.moshahab.shopping_cart.repository.CategoryRepository;
+import com.moshahab.shopping_cart.repository.ImageRepository;
 import com.moshahab.shopping_cart.repository.ProductRepository;
 import com.moshahab.shopping_cart.request.AddProductRequest;
 import com.moshahab.shopping_cart.request.UpdateProductRequest;
@@ -21,6 +26,8 @@ public class ProductService implements IProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Product addProducts(AddProductRequest request) {
@@ -117,4 +124,19 @@ public class ProductService implements IProductService {
         return productRepository.countByBrandAndName(brand, name);
     }
 
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products) {
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product) {
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+        productDto.setImages(imageDtos);
+        return productDto;
+    }
 }
