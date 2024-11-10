@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moshahab.shopping_cart.exceptions.ResourceNotFoundException;
+import com.moshahab.shopping_cart.model.Cart;
+import com.moshahab.shopping_cart.model.User;
 import com.moshahab.shopping_cart.response.ApiResponse;
 import com.moshahab.shopping_cart.service.cart.ICartItemService;
 import com.moshahab.shopping_cart.service.cart.ICartService;
+import com.moshahab.shopping_cart.service.user.IUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +26,7 @@ public class CartItemController {
 
     private final ICartItemService cartItemService;
     private final ICartService cartService;
+    private final IUserService userService;
 
     @PostMapping("/item/add")
     public ResponseEntity<ApiResponse> addItemToCart(
@@ -32,10 +36,9 @@ public class CartItemController {
 
         try {
 
-            if (cartId == null) {
-                cartId = cartService.initializeNewCart();
-            }
-            cartItemService.addItemToCart(cartId, productid, quantity);
+            User user = userService.getUserById(4L);
+            Cart cart = cartService.initializeNewCart(user);
+            cartItemService.addItemToCart(cart.getId(), productid, quantity);
             return ResponseEntity.ok(new ApiResponse("Added Item to the cart", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(404).body(new ApiResponse(e.getMessage(), cartId));

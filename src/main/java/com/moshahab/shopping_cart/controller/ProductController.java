@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moshahab.shopping_cart.dto.ProductDto;
+import com.moshahab.shopping_cart.exceptions.AlreadyExistsException;
 import com.moshahab.shopping_cart.exceptions.ResourceNotFoundException;
 import com.moshahab.shopping_cart.model.Product;
 import com.moshahab.shopping_cart.request.AddProductRequest;
@@ -54,8 +55,8 @@ public class ProductController {
 
             Product theProduct = productService.addProducts(product);
             return ResponseEntity.ok(new ApiResponse("Add Product Success", theProduct));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ApiResponse(e.getMessage(), null));
+        } catch (AlreadyExistsException e) {
+            return ResponseEntity.status(409).body(new ApiResponse(e.getMessage(), null));
         }
     }
 

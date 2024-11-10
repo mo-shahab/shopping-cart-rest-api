@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.moshahab.shopping_cart.dto.UserDto;
 import com.moshahab.shopping_cart.exceptions.AlreadyExistsException;
 import com.moshahab.shopping_cart.exceptions.ResourceNotFoundException;
 import com.moshahab.shopping_cart.model.User;
@@ -31,7 +32,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
         try {
             User user = userService.getUserById(id);
-            return ResponseEntity.ok().body(new ApiResponse("Success", user));
+            UserDto userDto = userService.convertUserToDto(user);
+            return ResponseEntity.ok().body(new ApiResponse("Success", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(404).body(new ApiResponse(e.getMessage(), id));
         }
@@ -42,7 +44,8 @@ public class UserController {
         try {
 
             User user = userService.createUser(request);
-            return ResponseEntity.ok(new ApiResponse("Successfully added the new user", user));
+            UserDto userDto = userService.convertUserToDto(user);
+            return ResponseEntity.ok(new ApiResponse("Successfully added the new user", userDto));
         } catch (AlreadyExistsException e) {
             return ResponseEntity.status(409).body(new ApiResponse((e.getMessage()), null));
         }
@@ -52,7 +55,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@RequestBody UpdateUserRequest request, @PathVariable Long userId) {
         try {
             User savedUser = userService.updateUser(request, userId);
-            return ResponseEntity.ok(new ApiResponse("Succesfully updated the user", savedUser));
+            UserDto userDto = userService.convertUserToDto(savedUser);
+            return ResponseEntity.ok(new ApiResponse("Succesfully updated the user", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(404).body(new ApiResponse(e.getMessage(), userId));
         }
@@ -60,11 +64,11 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId){
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
         try {
-            
-        userService.deleteUser(userId);
-        return ResponseEntity.ok(new ApiResponse("Deleted user succesfully", userId));
+
+            userService.deleteUser(userId);
+            return ResponseEntity.ok(new ApiResponse("Deleted user succesfully", userId));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(404).body(new ApiResponse(e.getMessage(), userId));
         }

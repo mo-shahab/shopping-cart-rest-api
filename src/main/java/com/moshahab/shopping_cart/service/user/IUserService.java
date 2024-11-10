@@ -1,5 +1,6 @@
 package com.moshahab.shopping_cart.service.user;
 
+import com.moshahab.shopping_cart.dto.UserDto;
 import com.moshahab.shopping_cart.model.User;
 import com.moshahab.shopping_cart.request.CreateUserRequest;
 import com.moshahab.shopping_cart.request.UpdateUserRequest;
@@ -11,5 +12,7 @@ public interface IUserService {
 
     User updateUser(UpdateUserRequest request, Long userId);
 
-    void deleteUser(Long  userId);
+    void deleteUser(Long userId);
+
+    UserDto convertUserToDto(User user);
 }

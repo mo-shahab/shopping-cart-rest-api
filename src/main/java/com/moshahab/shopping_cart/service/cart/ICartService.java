@@ -3,6 +3,7 @@ package com.moshahab.shopping_cart.service.cart;
 import java.math.BigDecimal;
 
 import com.moshahab.shopping_cart.model.Cart;
+import com.moshahab.shopping_cart.model.User;
 
 public interface ICartService {
 
@@ -12,7 +13,7 @@ public interface ICartService {
 
     BigDecimal getTotalPrice(Long id);
 
-    Long initializeNewCart();
+    Cart initializeNewCart(User user);
 
     Cart getCartByUserId(Long userId);
 }

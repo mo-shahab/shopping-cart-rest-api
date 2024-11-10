@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.moshahab.shopping_cart.dto.ImageDto;
 import com.moshahab.shopping_cart.dto.ProductDto;
+import com.moshahab.shopping_cart.exceptions.AlreadyExistsException;
 import com.moshahab.shopping_cart.exceptions.ProductNotFoundException;
 import com.moshahab.shopping_cart.model.Category;
 import com.moshahab.shopping_cart.model.Image;
@@ -35,6 +36,12 @@ public class ProductService implements IProductService {
         // if yes, set it as the new product's category
         // if not, then save it as a new category
         // then set the new categ to the new product
+
+        if (productExists(request.getName(), request.getBrand())) {
+            throw new AlreadyExistsException(
+                    request.getBrand() + " " + request.getName() + " already exists, you can still update it instead");
+        }
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
@@ -42,6 +49,10 @@ public class ProductService implements IProductService {
                 });
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
+    }
+
+    private boolean productExists(String name, String brand) {
+        return productRepository.existsByNameAndBrand(name, brand);
     }
 
     // helper function to create the product before adding it in the db

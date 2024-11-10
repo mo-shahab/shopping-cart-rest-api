@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moshahab.shopping_cart.dto.OrderDto;
@@ -15,6 +16,7 @@ import com.moshahab.shopping_cart.model.Order;
 import com.moshahab.shopping_cart.response.ApiResponse;
 import com.moshahab.shopping_cart.service.order.IOrderService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,11 +25,13 @@ import lombok.RequiredArgsConstructor;
 public class OrderController {
     private final IOrderService orderService;
 
+    @Transactional
     @PostMapping("/placeOrder")
-    public ResponseEntity<ApiResponse> createOrder(Long userId) {
+    public ResponseEntity<ApiResponse> createOrder(@RequestParam Long userId) {
         try {
             Order order = orderService.placeOrder(userId);
-            return ResponseEntity.ok(new ApiResponse("success in placing order", order));
+            OrderDto orderDto = orderService.convertToDto(order);
+            return ResponseEntity.ok(new ApiResponse("success in placing order", orderDto));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ApiResponse("An Error Occured", e.getMessage()));
         }

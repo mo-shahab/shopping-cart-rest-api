@@ -2,8 +2,10 @@ package com.moshahab.shopping_cart.service.user;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.moshahab.shopping_cart.dto.UserDto;
 import com.moshahab.shopping_cart.exceptions.AlreadyExistsException;
 import com.moshahab.shopping_cart.exceptions.ResourceNotFoundException;
 import com.moshahab.shopping_cart.model.User;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public User getUserById(Long id) {
@@ -55,4 +58,8 @@ public class UserService implements IUserService {
                 });
     }
 
+    @Override
+    public UserDto convertUserToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
+    }
 }
