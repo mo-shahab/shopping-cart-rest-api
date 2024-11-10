@@ -1,4 +1,4 @@
-package com.moshahab.shopping_cart.config;
+package com.moshahab.shopping_cart.security.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
