@@ -17,6 +17,7 @@ import com.moshahab.shopping_cart.service.cart.ICartItemService;
 import com.moshahab.shopping_cart.service.cart.ICartService;
 import com.moshahab.shopping_cart.service.user.IUserService;
 
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -36,12 +37,17 @@ public class CartItemController {
 
         try {
 
-            User user = userService.getUserById(4L);
+            User user = userService.getAuthenticatedUser();
+            if (user == null) {
+                return ResponseEntity.status(401).body(new ApiResponse("You need to log in first.", null));
+            }
             Cart cart = cartService.initializeNewCart(user);
             cartItemService.addItemToCart(cart.getId(), productid, quantity);
             return ResponseEntity.ok(new ApiResponse("Added Item to the cart", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(404).body(new ApiResponse(e.getMessage(), cartId));
+        } catch (JwtException e) {
+            return ResponseEntity.status(401).body(new ApiResponse(e.getMessage(), null));
         }
     }
 

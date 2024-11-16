@@ -3,6 +3,7 @@ package com.moshahab.shopping_cart.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,10 +50,10 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("product/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
         try {
-
             Product theProduct = productService.addProducts(product);
             return ResponseEntity.ok(new ApiResponse("Add Product Success", theProduct));
         } catch (AlreadyExistsException e) {
@@ -60,6 +61,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/product/{id}/update")
     public ResponseEntity<ApiResponse> updateProduct(@RequestBody UpdateProductRequest product, @PathVariable Long id) {
         try {
@@ -70,6 +72,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/product/{id}/delete")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long id) {
         try {
