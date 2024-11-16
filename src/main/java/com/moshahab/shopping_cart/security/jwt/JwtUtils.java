@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -21,10 +22,14 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtils {
+
+    @Value("${auth.token.jwtSecret}")
     private String jwtSecret;
+    @Value("${auth.token.expirationInMils}")
     private int expirationTime;
 
     public String generateTokenForUser(Authentication authentication) {
+        // this is the logge in user
         ShopUserDetails userPrincipal = (ShopUserDetails) authentication.getPrincipal();
 
         List<String> roles = userPrincipal
@@ -56,6 +61,7 @@ public class JwtUtils {
 
     }
 
+    // generate secret key and al from the devglan site :)
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
