@@ -1,0 +1,23 @@
+services:
+  app: 
+    build: . 
+    ports: 
+      - "9193:9193"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: "mysql:latest"
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=shoppingcart_db
+      - MYSQL_USER=springstudent
+      - MYSQL_PASSWORD=springstudent
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
