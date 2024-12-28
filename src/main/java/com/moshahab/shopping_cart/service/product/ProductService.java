@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.moshahab.shopping_cart.dto.ImageDto;
@@ -67,8 +70,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAllProducts(Long cursor, int size) {
+        Pageable pageable = PageRequest.of(0, size, Sort.by("id").ascending());
+        return productRepository.findProductsAfterCursor(cursor == null ? 0 : cursor, pageable);
     }
 
     @Override

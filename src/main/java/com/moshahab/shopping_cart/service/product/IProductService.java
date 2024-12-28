@@ -8,9 +8,9 @@ import com.moshahab.shopping_cart.request.AddProductRequest;
 import com.moshahab.shopping_cart.request.UpdateProductRequest;
 
 public interface IProductService {
-    Product addProducts(AddProductRequest product);
+    List<Product> getAllProducts(Long cursor, int size);
 
-    List<Product> getAllProducts();
+    Product addProducts(AddProductRequest product);
 
     Product getProductById(Long id);
 
