@@ -21,6 +21,7 @@ import com.moshahab.shopping_cart.model.Product;
 import com.moshahab.shopping_cart.request.AddProductRequest;
 import com.moshahab.shopping_cart.request.UpdateProductRequest;
 import com.moshahab.shopping_cart.response.ApiResponse;
+import com.moshahab.shopping_cart.response.CursorResponse;
 import com.moshahab.shopping_cart.service.product.IProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,16 @@ public class ProductController {
     private final IProductService productService;
 
     @GetMapping("/product/all")
-    public ResponseEntity<ApiResponse> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<ApiResponse> getAllProducts(
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(defaultValue = "3") int size) {
+        List<Product> products = productService.getAllProducts(cursor, size);
         List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
-        return ResponseEntity.ok(new ApiResponse("Success!", convertedProducts));
+        Long nextCursor = products.isEmpty() ? null : products.get(products.size() - 1).getId();
+
+        CursorResponse<ProductDto> response = new CursorResponse<>(convertedProducts, nextCursor);
+
+        return ResponseEntity.ok(new ApiResponse("Success!", response));
     }
 
     @GetMapping("/products/product/{id}/product")
